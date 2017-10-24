@@ -17,7 +17,7 @@ public class dynamicSetTPSTask extends BukkitRunnable
 	public void run() {
 		if(!plugin.getServer().getOnlinePlayers().isEmpty()){
 			for(Player p : plugin.getServer().getOnlinePlayers()){
-				p.setViewDistance(plugin.getViewDistance(p));
+				plugin.setViewDistance(p);
 			}
 		}		
 	}

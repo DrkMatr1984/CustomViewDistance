@@ -1,1 +1,16 @@
-
+general: ##These values are used across the plugin. Place a value between 2 and 32 here.
+         ##If maxViewDistance is greater than server viewdistance it will default to server value
+  minViewDistance: 2         
+  maxViewDistance: 16
+elytraViewDistance: ##View Distance of players flying on Elytras
+  enabled: true
+  viewDistance: 2
+dynamicViewDistance: ##DynamicViewDistance Handler - Changes ViewDistance for all players based on TPS
+                     ##However, if all options are enabled, the lowest value at calculation is the value used
+                     ##used for the player
+  enabled: true
+  interval:  10
+commandViewDistance: ##Enable /viewdistance command
+  enabled: true
+permissionViewDistance: ##enabled customviewdistance.perm.* (2-32) permission based viewdistance
+  enabled: false

@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -47,10 +46,17 @@ public class PlayerData{
     }
 	  
 	public void loadUserList(){
+		playerSetDistance = new HashMap<UUID, Integer>();
+		UUID player;
+		String distance;
 		//Load Players and their ViewDistances
 		users = YamlConfiguration.loadConfiguration(usersFile);
 		for(String s : users.getKeys(true)){
-			Bukkit.getLogger().info(s);
+            if(isUUID(s)){
+            	distance = (String) users.getString(s);
+            	player = UUID.fromString(s);
+            	playerSetDistance.put(player,Integer.valueOf(distance));
+			}		
 		}
 	}
 	  
@@ -59,7 +65,7 @@ public class PlayerData{
 		if(playerSetDistance!=null)
 		{
 			for(UUID uid : playerSetDistance.keySet()){
-				users.set("ViewPlayers." + uid.toString(), playerSetDistance.get(uid));
+				users.set("ViewPlayers." + uid.toString(), (playerSetDistance.get(uid)).toString());
 			}
 		}
 		if(usersFile.exists())
@@ -76,5 +82,14 @@ public class PlayerData{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}	
+	}
+	
+	private boolean isUUID(String s){
+		try{
+			UUID.fromString(s);				
+		}catch(IllegalArgumentException e){
+			return false;
+		}
+		return true;
+	}
 }

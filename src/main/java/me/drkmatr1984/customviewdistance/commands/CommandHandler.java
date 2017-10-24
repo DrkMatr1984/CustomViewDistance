@@ -6,14 +6,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.drkmatr1984.customviewdistance.CustomViewDistance;
+import me.drkmatr1984.customviewdistance.handlers.PermissionHandler;
 
 
 public class CommandHandler implements CommandExecutor
 {
 	private CustomViewDistance plugin;
+	private PermissionHandler pH;
 	
 	public CommandHandler(CustomViewDistance plugin){
 		this.plugin = plugin;
+		this.pH = plugin.getPermHandler();
 	}
 	
 	@Override
@@ -24,20 +27,39 @@ public class CommandHandler implements CommandExecutor
 					sender.sendMessage("Must be a player to use this command");
 				}else{
 					Player player = (Player) sender;
-					if ((args.length == 0) || (args.equals(null)))
-				    {
-						sender.sendMessage("ViewDistance requires an Integer between " + plugin.getConfigAccessor().getMinViewDistance() + " and " + plugin.getConfigAccessor().getMaxViewDistance());
-				    }else if(args.length > 0){
-				    	player.sendMessage(args[0]);
-						if(isInteger(args[0])){
-							player.setViewDistance(Integer.parseInt(args[0]));
-							plugin.getDataHandler().playerSetDistance.put(player.getUniqueId(), Integer.parseInt(args[0]));
-						}						
-				    }
+					if(player.hasPermission(pH.commandViewDistancePerm)){
+						if ((args.length == 0) || (args.equals(null)))
+					    {
+							sender.sendMessage("ViewDistance requires an Integer between " + plugin.getConfigAccessor().getMinViewDistance() + " and " + plugin.getConfigAccessor().getMaxViewDistance());
+					    }
+						if(args.length == 1){
+							if(isInteger(args[0])){
+								if(this.pH.hasViewDistancePerm(player, Integer.parseInt(args[0]))){
+									if(Integer.parseInt(args[0]) <= plugin.getConfigAccessor().getMaxViewDistance() && Integer.parseInt(args[0]) >= plugin.getConfigAccessor().getMinViewDistance())
+									{
+										if(plugin.getDataHandler().playerSetDistance.containsKey(player.getUniqueId())){
+											plugin.getDataHandler().playerSetDistance.remove(player.getUniqueId());
+										}
+										plugin.getDataHandler().playerSetDistance.put(player.getUniqueId(), Integer.parseInt(args[0]));
+										plugin.setViewDistance(player);				
+									}else{
+										sender.sendMessage("ViewDistance requires an Integer between " + plugin.getConfigAccessor().getMinViewDistance() + " and " + plugin.getConfigAccessor().getMaxViewDistance());
+									}
+								}else{
+									player.sendMessage("You don't have permission");
+								}
+							}						
+					    }else if(args.length > 1){
+					    	sender.sendMessage("ViewDistance requires an Integer between " + plugin.getConfigAccessor().getMinViewDistance() + " and " + plugin.getConfigAccessor().getMaxViewDistance());
+					    }
+					}else{
+						player.sendMessage("You don't have permission");
+					}
+					
 				}			
 			}
 		}catch (Exception e) {
-			
+			sender.sendMessage("Exception");
 		}
 		return false;
 		

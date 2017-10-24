@@ -3,3 +3,8 @@ main: me.drkmatr1984.customviewdistance.CustomViewDistance
 version: 0.1
 author: DrkMatr1984
 description: A plugin for paperSpigot that adjusts the server ViewDistance dynamically based on a min and max value and current server TPS, allows users to set their own ViewDistance, and allows server owners to set ViewDistance by permission
+softdepend: [WorldGuard]
+commands:
+    viewdistance:
+        description: Allows the User to set their own ViewDistance between the Min and Max values defined in the config
+        aliases: [vd, vdistance, view-distance, viewdist, viewdi, viewdis, viewd]
